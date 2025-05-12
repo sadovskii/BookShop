@@ -1,7 +1,5 @@
-using BookShop.Api.Application.CommandHandlers;
 using BookShop.Api.EF;
 using BookShop.Api.EF.DependencyInjection;
-using BookShop.Api.Queries.QueryHandlers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,11 +19,6 @@ builder.Services.AddDbContext<BookShopContext>(options =>
 builder.Services.RegisterRepositories();
 
 builder.Services.AddSwaggerGen();
-builder.Services.AddMediatR(cfg =>
-{
-	cfg.RegisterServicesFromAssemblyContaining<AddBookCommnadHandler>();
-	cfg.RegisterServicesFromAssemblyContaining<GetBookQueryHandler>();
-});
 
 
 var app = builder.Build();

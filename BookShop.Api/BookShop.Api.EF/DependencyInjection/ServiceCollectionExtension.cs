@@ -1,5 +1,5 @@
-﻿using BookShop.Api.Domain.Repositories;
-using BookShop.Api.EF.Repositories;
+﻿using BookShop.Api.EF.Repositories;
+using BookShop.Api.EF.Repositories.Abstract;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BookShop.Api.EF.DependencyInjection

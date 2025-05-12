@@ -1,4 +1,4 @@
-﻿namespace BookShop.Api.Domain.Types
+﻿namespace BookShop.Api.EF.Types
 {
 	public enum BookGenre
 	{

@@ -14,9 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BookShop.Api.Application\BookShop.Api.Application.csproj" />
     <ProjectReference Include="..\BookShop.Api.EF\BookShop.Api.EF.csproj" />
-    <ProjectReference Include="..\BookShop.Api.Queries\BookShop.Api.Queries.csproj" />
   </ItemGroup>
 
 </Project>

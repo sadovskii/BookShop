@@ -1,5 +1,5 @@
-﻿using BookShop.Api.Domain.Types;
-using BookShop.Api.EF.Entities;
+﻿using BookShop.Api.EF.Entities;
+using BookShop.Api.EF.Types;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;

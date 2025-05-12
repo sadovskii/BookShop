@@ -1,6 +1,5 @@
-﻿using BookShop.Api.Application.Commands;
-using BookShop.Api.Queries.Queries;
-using MediatR;
+﻿using BookShop.Api.EF.Entities;
+using BookShop.Api.EF.Repositories.Abstract;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Api.Controllers
@@ -9,17 +8,17 @@ namespace BookShop.Api.Controllers
 	[ApiController]
 	public class BooksController : ControllerBase
 	{
-		private readonly IMediator _mediator;
+		private readonly IBookRepository _bookRepository;
 
-		public BooksController(IMediator mediator)
+		public BooksController(IBookRepository bookRepository)
 		{
-			_mediator = mediator;
+			_bookRepository = bookRepository;
 		}
 
 		[HttpGet]
 		public async Task<IActionResult> GetAll()
 		{
-			var books = await _mediator.Send(new GetBooksQuery());
+			var books = await _bookRepository.GetAllAsync();
 
 			if (books is null || books.Count() == 0)
 			{
@@ -32,7 +31,7 @@ namespace BookShop.Api.Controllers
 		[HttpGet("{id}")]
 		public async Task<IActionResult> Get(Guid id)
 		{
-			var book = await _mediator.Send(new GetBookQuery(id));
+			var book = await _bookRepository.TryFindByIdAsync(id);
 
 			if (book is null)
 			{
@@ -43,16 +42,24 @@ namespace BookShop.Api.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Add([FromBody] AddBookCommand bookCommnad, CancellationToken cancellationToken)
+		public async Task<IActionResult> Add([FromBody] Book bookCommnad, CancellationToken cancellationToken)
 		{
-			await _mediator.Send(bookCommnad, cancellationToken);
+			//await _mediator.Send(bookCommnad, cancellationToken);
 			return Created();
 		}
 
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> Remove(Guid id)
 		{
-			await _mediator.Send(new RemoveBookCommand(id));
+			var book = await _bookRepository.TryFindByIdAsync(id);
+
+			if (book is null)
+			{
+				return NoContent();
+			}
+
+			_bookRepository.Delete(book);
+
 			return NoContent();
 		}
 	}

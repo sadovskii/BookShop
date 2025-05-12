@@ -1,9 +1,9 @@
-﻿using BookShop.Api.Domain.Entities.Abstract;
+﻿using BookShop.Api.EF.Entities.Abstract;
 
-namespace BookShop.Api.Domain.Repositories.Abstract
+namespace BookShop.Api.EF.Repositories.Abstract
 {
 	public interface IRepository<TEntity>
-		where TEntity : Entity
+		where TEntity : DbEntity
 	{
 		Task<TEntity?> TryFindByIdAsync(Guid id, CancellationToken cancellationToken = default);
 

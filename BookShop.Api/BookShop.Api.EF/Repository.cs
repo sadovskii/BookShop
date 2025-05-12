@@ -1,17 +1,15 @@
 ﻿using AutoMapper;
-using BookShop.Api.Domain.Entities.Abstract;
-using BookShop.Api.Domain.Repositories.Abstract;
 using BookShop.Api.EF.Entities.Abstract;
+using BookShop.Api.EF.Repositories.Abstract;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookShop.Api.EF
 {
-	public class Repository<TEntity, TDbEntity> : IRepository<TEntity>
-		where TEntity : Entity
-		where TDbEntity : DbEntity
+	public class Repository<TEntity> : IRepository<TEntity>
+		where TEntity : DbEntity
 	{
 
-		protected DbSet<TDbEntity> DbSet { get; }
+		protected DbSet<TEntity> DbSet { get; }
 
 		protected IMapper Mapper { get; }
 
@@ -22,49 +20,32 @@ namespace BookShop.Api.EF
 		public Repository(BookShopContext dbContext, IMapper mapper)
 		{
 			DbContext = dbContext;
-			DbSet = dbContext.Set<TDbEntity>();
+			DbSet = dbContext.Set<TEntity>();
 			Mapper = mapper;
 		}
 
 		public void Add(TEntity entity)
 		{
-			var dbEntity = Mapper.Map<TDbEntity>(entity);
-			DbSet.Add(dbEntity);
+			DbSet.Add(entity);
 		}
 		public async Task<IEnumerable<TEntity>> GetAllAsync()
 		{
-			var dbEntities = await DbSet.ToListAsync();
-
-			return Mapper.Map<IEnumerable<TEntity>>(dbEntities);
+			return await DbSet.ToListAsync();
 		}
 
 		public async Task<TEntity?> TryFindByIdAsync(Guid id, CancellationToken cancellationToken = default)
 		{
-			var dbEntity = await DbSet.SingleOrDefaultAsync(entity => entity.Id.Equals(id), cancellationToken);
-
-			return Mapper.Map<TEntity>(dbEntity);
+			return await DbSet.SingleOrDefaultAsync(entity => entity.Id.Equals(id), cancellationToken);
 		}
 
 		public void Update(TEntity entity)
 		{
-			var dbEntity = DbSet.FirstOrDefault(e => e.Id.Equals(entity.Id));
-
-			if (dbEntity is not null)
-			{
-				Mapper.Map(entity, dbEntity);
-			}
-			else
-			{
-				dbEntity = Mapper.Map<TDbEntity>(entity);
-			}
-
-			DbSet.Update(dbEntity);
+			DbSet.Update(entity);
 		}
 
 		public void Delete(TEntity entity)
 		{
-			var dbEntity = Mapper.Map<TDbEntity>(entity);
-			DbSet.Remove(dbEntity).DetectChanges();
+			DbSet.Remove(entity);
 		}
 
 		public async Task SaveChangesAsync(CancellationToken cancellationToken = default)

@@ -12,8 +12,4 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.4" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BookShop.Api.Domain\BookShop.Api.Domain.csproj" />
-  </ItemGroup>
-
 </Project>

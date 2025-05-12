@@ -3,7 +3,7 @@ using BookShop.Api.EF.Entities.Abstract;
 
 namespace BookShop.Api.EF.Entities
 {
-	internal class Book : DbEntity
+	public class Book : DbEntity
 	{
 		public string Name { get; private set; } = null!;
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookShop.Api.EF
 {
-	internal class Repository<TEntity, TDbEntity> : IRepository<TEntity>
+	public class Repository<TEntity, TDbEntity> : IRepository<TEntity>
 		where TEntity : Entity
 		where TDbEntity : DbEntity
 	{

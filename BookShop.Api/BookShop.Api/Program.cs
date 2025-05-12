@@ -17,6 +17,7 @@ builder.Services.AddDbContext<BookShopContext>(options =>
 
 builder.Services.RegisterRepositories();
 
+builder.Services.AddSwaggerGen();
 
 
 var app = builder.Build();
@@ -24,7 +25,13 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-	app.MapOpenApi();
+	//app.MapOpenApi();
+
+	// Serve the generated Swagger document as JSON.
+	app.UseSwagger();
+
+	// Serve the Swagger UI, which provides a web-based API explorer.
+	app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

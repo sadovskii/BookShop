@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BookShop.Api.EF
 {
-	internal class BookShopContext : DbContext
+	public class BookShopContext : DbContext
 	{
 		public DbSet<Book> Books { get; set; }
 

@@ -15,11 +15,11 @@ namespace BookShop.Api.EF
 
 		protected IMapper Mapper { get; }
 
-		protected DbContext DbContext { get; }
+		protected BookShopContext DbContext { get; }
 
 
 
-		public Repository(DbContext dbContext, IMapper mapper)
+		public Repository(BookShopContext dbContext, IMapper mapper)
 		{
 			DbContext = dbContext;
 			DbSet = dbContext.Set<TDbEntity>();

@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BookShop.Api.Application.Commands;
+using BookShop.Api.Queries.Queries;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Api.Controllers
 {
@@ -6,17 +9,51 @@ namespace BookShop.Api.Controllers
 	[ApiController]
 	public class BooksController : ControllerBase
 	{
-		[HttpGet]
-		public string GetAll()
+		private readonly IMediator _mediator;
+
+		public BooksController(IMediator mediator)
 		{
-			return "GetAll";
+			_mediator = mediator;
 		}
 
 		[HttpGet]
-		[Route("{id}")]
-		public string Get(int id)
+		public async Task<IActionResult> GetAll()
 		{
-			return $"get with id = {id}";
+			var books = await _mediator.Send(new GetBooksQuery());
+
+			if (books is null || books.Count() == 0)
+			{
+				return NotFound();
+			}
+
+			return Ok(books);
+		}
+
+		[HttpGet("{id}")]
+		public async Task<IActionResult> Get(Guid id)
+		{
+			var book = await _mediator.Send(new GetBookQuery(id));
+
+			if (book is null)
+			{
+				return NotFound();
+			}
+
+			return Ok(book);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Add([FromBody] AddBookCommand bookCommnad, CancellationToken cancellationToken)
+		{
+			await _mediator.Send(bookCommnad, cancellationToken);
+			return Created();
+		}
+
+		[HttpDelete("{id}")]
+		public async Task<IActionResult> Remove(Guid id)
+		{
+			await _mediator.Send(new RemoveBookCommand(id));
+			return NoContent();
 		}
 	}
 }

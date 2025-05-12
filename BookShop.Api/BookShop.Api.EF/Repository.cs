@@ -64,7 +64,7 @@ namespace BookShop.Api.EF
 		public void Delete(TEntity entity)
 		{
 			var dbEntity = Mapper.Map<TDbEntity>(entity);
-			DbSet.Remove(dbEntity);
+			DbSet.Remove(dbEntity).DetectChanges();
 		}
 
 		public async Task SaveChangesAsync(CancellationToken cancellationToken = default)

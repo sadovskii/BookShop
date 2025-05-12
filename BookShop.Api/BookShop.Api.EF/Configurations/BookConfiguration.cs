@@ -11,7 +11,7 @@ namespace BookShop.Api.EF.Configurations
 		public void Configure(EntityTypeBuilder<Book> builder)
 		{
 			builder.ToTable(nameof(Book));
-			builder.Property(x => x.Id).ValueGeneratedOnAdd();
+			builder.HasKey(x => x.Id);
 			builder.Property(x => x.BookGenre).HasConversion(new EnumToNumberConverter<BookGenre, uint>());
 		}
 	}

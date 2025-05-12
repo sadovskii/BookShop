@@ -1,4 +1,4 @@
-﻿namespace BookShop.Api.EF
+﻿namespace BookShop.Api.EF.Entities.Abstract
 {
 	public abstract class DbEntity
 	{

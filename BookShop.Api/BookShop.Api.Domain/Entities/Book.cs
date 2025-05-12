@@ -1,4 +1,5 @@
-﻿using BookShop.Api.Domain.Types;
+﻿using BookShop.Api.Domain.Entities.Abstract;
+using BookShop.Api.Domain.Types;
 
 namespace BookShop.Api.Domain.Entities
 {

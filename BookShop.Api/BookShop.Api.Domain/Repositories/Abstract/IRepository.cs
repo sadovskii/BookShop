@@ -1,4 +1,4 @@
-﻿using BookShop.Api.Domain.Entities;
+﻿using BookShop.Api.Domain.Entities.Abstract;
 
 namespace BookShop.Api.Domain.Repositories.Abstract
 {

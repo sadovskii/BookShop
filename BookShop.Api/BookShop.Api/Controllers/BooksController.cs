@@ -1,5 +1,7 @@
-﻿using BookShop.Api.EF.Entities;
+﻿using AutoMapper;
+using BookShop.Api.EF.Entities;
 using BookShop.Api.EF.Repositories.Abstract;
+using BookShop.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Api.Controllers
@@ -9,21 +11,18 @@ namespace BookShop.Api.Controllers
 	public class BooksController : ControllerBase
 	{
 		private readonly IBookRepository _bookRepository;
+		private readonly IMapper _mapper;
 
-		public BooksController(IBookRepository bookRepository)
+		public BooksController(IBookRepository bookRepository, IMapper mapper)
 		{
 			_bookRepository = bookRepository;
+			_mapper = mapper;
 		}
 
 		[HttpGet]
 		public async Task<IActionResult> GetAll()
 		{
 			var books = await _bookRepository.GetAllAsync();
-
-			if (books is null || books.Count() == 0)
-			{
-				return NotFound();
-			}
 
 			return Ok(books);
 		}
@@ -42,10 +41,37 @@ namespace BookShop.Api.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Add([FromBody] Book bookCommnad, CancellationToken cancellationToken)
+		public async Task<IActionResult> Add([FromBody] BookDto model, CancellationToken cancellationToken)
 		{
-			//await _mediator.Send(bookCommnad, cancellationToken);
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			var book = _mapper.Map<Book>(model);
+
+			_bookRepository.Add(book);
+			await _bookRepository.SaveChangesAsync();
+
 			return Created();
+		}
+
+		[HttpPut("id")]
+		public async Task<IActionResult> Update(Guid id, [FromBody] BookDto model, CancellationToken cancellationToken)
+		{
+			var existingBook = await _bookRepository.TryFindByIdAsync(id);
+			if (existingBook == null)
+			{
+				return NotFound();
+			}
+
+
+			_mapper.Map(model, existingBook);
+
+			_bookRepository.Update(existingBook);
+			await _bookRepository.SaveChangesAsync();
+
+			return Ok();
 		}
 
 		[HttpDelete("{id}")]
@@ -53,12 +79,12 @@ namespace BookShop.Api.Controllers
 		{
 			var book = await _bookRepository.TryFindByIdAsync(id);
 
-			if (book is null)
+			if (book is not null)
 			{
-				return NoContent();
+				_bookRepository.Delete(book);
+				await _bookRepository.SaveChangesAsync();
 			}
 
-			_bookRepository.Delete(book);
 
 			return NoContent();
 		}

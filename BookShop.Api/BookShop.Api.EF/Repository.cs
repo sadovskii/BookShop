@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using BookShop.Api.EF.Entities.Abstract;
+﻿using BookShop.Api.EF.Entities.Abstract;
 using BookShop.Api.EF.Repositories.Abstract;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,17 +10,12 @@ namespace BookShop.Api.EF
 
 		protected DbSet<TEntity> DbSet { get; }
 
-		protected IMapper Mapper { get; }
-
 		protected BookShopContext DbContext { get; }
 
-
-
-		public Repository(BookShopContext dbContext, IMapper mapper)
+		public Repository(BookShopContext dbContext)
 		{
 			DbContext = dbContext;
 			DbSet = dbContext.Set<TEntity>();
-			Mapper = mapper;
 		}
 
 		public void Add(TEntity entity)

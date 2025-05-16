@@ -6,7 +6,7 @@ namespace BookShop.Api.EF.Repositories
 {
 	public class BookRepository : Repository<Book>, IBookRepository
 	{
-		public BookRepository(BookShopContext dbContext, IMapper mapper) : base(dbContext, mapper)
+		public BookRepository(BookShopContext dbContext, IMapper mapper) : base(dbContext)
 		{
 		}
 	}

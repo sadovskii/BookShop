@@ -5,12 +5,12 @@ namespace BookShop.Api.EF.Entities
 {
 	public class Book : DbEntity
 	{
-		public string Name { get; private set; } = null!;
+		public string Name { get; set; } = null!;
 
-		public string Author { get; private set; } = null!;
+		public string Author { get; set; } = null!;
 
-		public int Pages { get; private set; }
+		public int Pages { get; set; }
 
-		public BookGenre BookGenre { get; private set; }
+		public BookGenre BookGenre { get; set; }
 	}
 }

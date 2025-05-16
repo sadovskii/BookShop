@@ -2,6 +2,7 @@
 using BookShop.Api.EF.Entities;
 using BookShop.Api.EF.Repositories.Abstract;
 using BookShop.Api.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookShop.Api.Controllers
@@ -43,11 +44,6 @@ namespace BookShop.Api.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Add([FromBody] BookDto model, CancellationToken cancellationToken)
 		{
-			if (!ModelState.IsValid)
-			{
-				return BadRequest(ModelState);
-			}
-
 			var book = _mapper.Map<Book>(model);
 
 			_bookRepository.Add(book);
@@ -65,8 +61,46 @@ namespace BookShop.Api.Controllers
 				return NotFound();
 			}
 
-
 			_mapper.Map(model, existingBook);
+
+			_bookRepository.Update(existingBook);
+			await _bookRepository.SaveChangesAsync();
+
+			return Ok();
+		}
+
+		[HttpPatch("{id}")]
+		public async Task<IActionResult> PatchBook(Guid id, [FromBody] JsonPatchDocument<BookDto> patchDoc)
+		{
+			if (patchDoc == null)
+			{
+				return BadRequest("Patch document cannot be null.");
+			}
+
+			var existingBook = await _bookRepository.TryFindByIdAsync(id);
+			if (existingBook == null)
+			{
+				return NotFound();
+			}
+
+			var bookDto = _mapper.Map<BookDto>(existingBook);
+
+			try
+			{
+				patchDoc.ApplyTo(bookDto, ModelState);
+			}
+			catch (ArgumentNullException ex)
+			{
+				return BadRequest(ex.Message);
+			}
+
+
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			_mapper.Map(bookDto, existingBook);
 
 			_bookRepository.Update(existingBook);
 			await _bookRepository.SaveChangesAsync();
